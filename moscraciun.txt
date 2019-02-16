@@ -1,0 +1,9 @@
+public static class MosCraciun {
+
+		Ren objRen = new Ren();
+
+		private void receiveGifts() {
+			System.out.println("Daruri primite de Mos Craciun:" + objRen.getQueue());
+		}
+
+	}

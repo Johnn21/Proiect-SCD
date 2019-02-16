@@ -1,0 +1,48 @@
+/**
+	 * 
+	 * the Ren class receives the gifts from Fabrica class one by one.
+	 *
+	 */
+	public static class Ren extends Thread {
+
+		/**
+		 * in the function run() from Ren class,i used a semaphore that will stop the
+		 * other Ren threads to acces the critical section,so that with one thread we
+		 * can display from Ren the gifts from Fabrica class,and also to display the
+		 * gifts that the reindeers took from Fabrica class and stored in the Ren
+		 * class.Then the presents from Ren will be stored in another queue called
+		 * 'factoryGifts',that is going to go in the MosCraciun class.I also used
+		 * another semaphore in the run() function from Fabrica class to give permission
+		 * to the Ren threads,after the factory interogates the elfs for they`re
+		 * positions and after the elfs inform the factory after they created a
+		 * gift,because the Ren threads cannot display the gifts from the Fabrica class
+		 * or take a gift before.
+		 */
+
+		public void run() {
+
+			Fabrica objFabrica = new Fabrica();
+			MosCraciun objMos = new MosCraciun();
+
+			try {
+				semRen.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			System.out.println("Cadouri afisate din Ren:" + objFabrica.getTheGifts());
+
+			System.out.println("Cadou luat de Reni:" + objFabrica.getOneGift());
+
+			factoryGifts.add(objFabrica.getOneGift().poll());
+
+			objMos.receiveGifts();
+
+		}
+
+		private Queue<Integer> getQueue() {
+			return factoryGifts;
+		}
+
+	}

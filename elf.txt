@@ -1,0 +1,255 @@
+/**
+	 * 
+	 * from the Elf class we are going to let the factory know the location of the
+	 * elfs after they are changing the positions,the gifts that were created,and
+	 * the number of the current factory.From this class the elfs create the
+	 * gifts,so when a gift is created,the elfs are changing the current position.
+	 * As variables in this class we have 'a' which represents the factory,I used
+	 * the variable 'b' to memorize the old position of the elf,'numar_Elfi' is the
+	 * number of the elfs,'contorElf' it`s a iterator for the elfs,and 'numarCadou'
+	 * it`s an iterator for the gifts,the variables 'cadouCurent' and 'elfCurent'
+	 * represents the current elf and the current gift and 'cont_Fabrica' it`s an
+	 * iterator for the factory
+	 *
+	 */
+
+	public static class Elf extends Thread {
+
+		private int[][] a = new int[marime_Fabrica][marime_Fabrica];
+		private int[][] b = new int[marime_Fabrica][marime_Fabrica];
+		private int numar_Elfi;
+		private int contorElf = -1;
+		private int numarCadou = -1;
+
+		private int cadouCurent;
+		private int elfCurent;
+		private int cont_Fabrica;
+
+		Elf(int[][] a, int numar_Elfi) {
+			this.a = a;
+			this.numar_Elfi = numar_Elfi;
+		}
+
+		/**
+		 * 
+		 * so with getGift(),the elfs will inform us when they created a gift,the number
+		 * of the elf that created the gift,the number of the gift and the number of the
+		 * factory that they belong to
+		 * 
+		 * 
+		 * @param i
+		 * 
+		 *            the first parameter represents the current gift that was created
+		 *            by the elfs
+		 * 
+		 * @param j
+		 * 
+		 *            the second parameter represents the current elf that created the
+		 *            current gift
+		 * 
+		 * @param k
+		 * 
+		 *            the third parameter represents the number of the current factory
+		 * 
+		 * 
+		 */
+
+		private void getGift(int i, int j, int k) {
+			this.cadouCurent = i;
+			this.elfCurent = j;
+			this.cont_Fabrica = k;
+
+			System.out.println("Elful cu numarul " + elfCurent + " din fabrica " + cont_Fabrica + " a facut cadoul "
+					+ cadouCurent);
+
+		}
+
+		/**
+		 * requestPosition() it`s the function used by Fabrica class,in run()
+		 * function,with the help of this function the factory will know what`s the
+		 * position of the elf in the factory,and the current factory. This function
+		 * will we called in the begining when the elfs are stored in the factories and
+		 * when the elfs are changing they`re position
+		 */
+
+		private void requestPosition() {
+
+			for (int i = 0; i < marime_Fabrica; i++) {
+				for (int j = 0; j < marime_Fabrica; j++) {
+					if (a[i][j] == 1) {
+						contorElf++;
+						System.out.println("Elful cu numarul #" + contorElf + " s-a gasit pe linia " + i + " coloana "
+								+ j + " din fabrica cu numarul " + contor_Fabrica);
+					}
+				}
+			}
+
+		}
+
+		/**
+		 * 
+		 * @throws InterruptedException
+		 * 
+		 * 
+		 *             with the help of this function the elfs are changing the
+		 *             positions,when they are moving,they are creating a gift. The
+		 *             first variable 'nrMutare' can have a value between one and four
+		 *             (one-left,two-down,three-right,four-up),so depending on the value
+		 *             of this variable,the elf will change his position.'move' it`s
+		 *             used as an iterator,it will increment when a elf has moved,if no
+		 *             elf has changed his position it will remain on zero.'timeToSleep'
+		 *             represents the time to rest for an elf.
+		 * 
+		 */
+		private void changePosition() throws InterruptedException {
+
+			int nrMutare;
+			int move = 0;
+			int timeToSleep = N.nextInt(50 - 10 + 1) + 10;
+			contorElf = -1;
+
+			for (int i = 0; i < marime_Fabrica; i++) {
+				for (int j = 0; j < marime_Fabrica; j++) {
+					nrMutare = N.nextInt(4 - 1 + 1) + 1;
+					if (a[i][j] == 1 && b[i][j] != 1) {
+						if (nrMutare == 1 && j == 0) { // perete stanga
+							while (nrMutare == 1) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+						if (nrMutare == 2 && i == (marime_Fabrica - 1)) { // perete jos
+							while (nrMutare == 2) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+						if (nrMutare == 3 && j == (marime_Fabrica - 1)) { // perete dreapta
+							while (nrMutare == 3) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+						if (nrMutare == 4 && i == 0) { // perete sus
+							while (nrMutare == 4) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+						if (nrMutare == 2 && a[i + 1][j] == 1 && i < (marime_Fabrica - 2)) { // daca are 1 jos
+							while (nrMutare == 2) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+						if (nrMutare == 3 && a[i][j + 1] == 1 && j < (marime_Fabrica - 2)) { // daca are 1
+																								// dreapta
+							while (nrMutare == 3) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+						if (nrMutare == 4 && a[i - 1][j] == 1 && i > 0) { // daca are 1 sus
+							while (nrMutare == 4) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+						if (nrMutare == 1 && a[i][j - 1] == 1 && j > 0) { // daca are 1 stanga
+							while (nrMutare == 1) {
+								nrMutare = N.nextInt(4 - 1 + 1) + 1;
+							}
+						}
+
+						if (nrMutare == 1) {
+							a[i][j] = 0;
+							a[i][j - 1] = 1;
+							b[i][j - 1] = a[i][j - 1];
+							move++;
+							contorElf++;
+							numarCadou++;
+							getGift(numarCadou, contorElf, contor_Fabrica); // elfii instiinteaza
+							myGifts.add(numarCadou);
+						}
+						if (nrMutare == 2) {
+							a[i][j] = 0;
+							a[i + 1][j] = 1;
+							b[i + 1][j] = a[i + 1][j];
+							move++;
+							contorElf++;
+							numarCadou++;
+							getGift(numarCadou, contorElf, contor_Fabrica); // elfii instiinteaza
+							myGifts.add(numarCadou);
+						}
+						if (nrMutare == 3) {
+							a[i][j] = 0;
+							a[i][j + 1] = 1;
+							b[i][j + 1] = a[i][j + 1];
+							move++;
+							contorElf++;
+							numarCadou++;
+							getGift(numarCadou, contorElf, contor_Fabrica); // elfii instiinteaza
+							myGifts.add(numarCadou);
+						}
+						if (nrMutare == 4) {
+							a[i][j] = 0;
+							a[i - 1][j] = 1;
+							b[i - 1][j] = a[i - 1][j];
+							move++;
+							contorElf++;
+							numarCadou++;
+							getGift(numarCadou, contorElf, contor_Fabrica); // elfii instiinteaza
+							myGifts.add(numarCadou);
+						}
+					}
+
+					if (move == 0) {
+						Thread.sleep(timeToSleep);
+					}
+
+				}
+			}
+		}
+
+		/**
+		 * int the run() function from Elf class,we have the variables called 'linie'
+		 * and 'coloana' that represent the position of the elfs,the value of those will
+		 * be a random number between the capacity of the factory and one. The variable
+		 * called 'sd' its a global variable,I used 'sd' as an iterator,it will be
+		 * incremented with one after an elf was stored in the factory.When all the elfs
+		 * are stored,the value of 'sd' will be equal with the number of the elfs,so the
+		 * factory can ask for the position of the elfs,and the elfs can start to create
+		 * the gifts,and move in the factory
+		 */
+		public void run() {
+
+			int linie, coloana;
+			int ok = 0;
+
+			sd++;
+
+			while (ok == 0) {
+
+				linie = N.nextInt((marime_Fabrica - 1) - 0 + 1) + 0;
+				coloana = N.nextInt((marime_Fabrica - 1) - 0 + 1) + 0;
+
+				if (a[linie][coloana] == 1) {
+					ok = 0;
+				} else if (a[linie][coloana] == 0) {
+					a[linie][coloana] = 1;
+					ok = 1;
+				}
+
+			}
+
+			if (sd == numar_Elfi) {
+
+				sd = 0;
+
+				requestPosition();
+
+				try {
+					changePosition();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+
+	}

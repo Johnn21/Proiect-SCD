@@ -1,0 +1,108 @@
+	public static class Fabrica extends Thread {
+
+		private int[][] a = new int[marime_Fabrica][marime_Fabrica];
+		private int elfCurent;
+
+		Ren objRen = new Ren();
+
+		/**
+		 * the function createElfs() it`s used to create the Elfs,the maximum number of
+		 * the elfs its the length of the factory divided by two,so the number of the
+		 * elfs it`s a random number between the maximum number of the elfs and one.
+		 */
+		private void createElfs() {
+
+			int numar_Elfi = N.nextInt(max - 1 + 1) + 1;
+			System.out.println("nr de elfi:" + numar_Elfi);
+			Thread thread[] = new Thread[numar_Elfi];
+
+			for (int i = 0; i < thread.length; i++) {
+				thread[i] = new Elf(a, numar_Elfi);
+			}
+
+			for (int i = 0; i < thread.length; i++) {
+				thread[i].start();
+				try {
+					thread[i].join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		int numar_Reni = 8;
+		Thread thread[] = new Thread[numar_Reni];
+
+		/**
+		 * in the run() function from Fabrica class,first the factories are created,and
+		 * all the positions from the factories are initialized with zero.Then the
+		 * function createElfs() it`s called,so the elfs will be created,but also they
+		 * will start to work in the factories that were created.Then the factory will
+		 * ask for the elf`s positions,and then the gifts that were created by the elfs
+		 * will be displayed.The gifts are stored in a queue called 'myGifts'.Then the
+		 * thread for the Ren class will be created,and these threads will take the
+		 * gifts one by one from the queue called 'myGifts' and added to another queue
+		 * called 'oneGift',this action will continue until the queue 'myGifts' will be
+		 * empty.In the end,the variable 'contor_Fabrica' will be incremented,meaning
+		 * that we are done with the current factory.
+		 */
+		public void run() {
+
+			Elf objElf = new Elf(a, elfCurent);
+
+			System.out.println("Marime Fabrica:" + marime_Fabrica);
+
+			for (int i = 0; i < marime_Fabrica; i++) {
+				for (int j = 0; j < marime_Fabrica; j++) {
+					a[i][j] = 0;
+				}
+			}
+
+			createElfs();
+
+			objElf.requestPosition();
+
+			System.out.println("Cadouri aduse in fabrica:" + myGifts);
+
+			for (int i = 0; i < thread.length; i++) {
+				thread[i] = new Ren();
+			}
+
+			while (myGifts.size() > 0) {
+
+				for (int i = 0; i < thread.length; i++) {
+
+					if (myGifts.size() > 0) {
+						oneGift.add(myGifts.poll());
+						semRen.release();
+						thread[i].start();
+						try {
+							thread[i].join();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					if (myGifts.size() > 0 && i == thread.length) {
+						i = 0;
+					} else if (myGifts.size() == 0) {
+						i = 7;
+					}
+				}
+			}
+
+			contor_Fabrica++;
+
+		}
+
+		private Queue<Integer> getOneGift() {
+			return oneGift;
+		}
+
+		private Queue<Integer> getTheGifts() {
+
+			return myGifts;
+
+		}
+
+	}
